@@ -3,7 +3,7 @@ from django.conf.urls import include, url
 from . import views
 
 cashpoint_api_patterns = [
-    url(r'^orders/(?P<order>[^/]+)/isNowMagicallyPayed/', views.ApiCashpointView.as_view(),
+    url(r'^orders/(?P<code>[^/]+)/cashpoint/', views.ApiCashpointView.as_view(),
         name='api.cashpoint'),
 ]
 

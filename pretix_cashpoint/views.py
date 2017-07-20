@@ -23,15 +23,15 @@ from pretix.multidomain.urlreverse import (
     build_absolute_uri as event_absolute_uri,
 )
 
-API_VERSION = 3
 from rest_framework.permissions import BasePermission
 from pretix.base.models.organizer import Organizer, TeamAPIToken
 from pretix.base.models.organizer import TeamAPIToken
 
+from pretix.base.services.orders import mark_order_paid
+
 class ApiView(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, **kwargs):
-        #return super().dispatch(request, **kwargs) # !!!
 
         try:
             self.event = Event.objects.get(
@@ -74,67 +74,37 @@ class ApiView(View):
 
 class ApiCashpointView(ApiView):
     def post(self, request, **kwargs):
-        secret = request.POST.get('secret', '!INVALID!')
-        force = request.POST.get('force', 'false') in ('true', 'True')
-        nonce = request.POST.get('nonce')
-        response = {
-            'version': API_VERSION,
-        }
+        logger = logging.getLogger(__name__)
+
+        response = {}
 
         if 'datetime' in request.POST:
             dt = dateutil.parser.parse(request.POST.get('datetime'))
         else:
             dt = now()
-        return JsonResponse(response) # !!!
+
         try:
             with transaction.atomic():
-                created = False
-                op = OrderPosition.objects.select_related('item', 'variation', 'order', 'addon_to').get(
-                    order__event=self.event, secret=secret, subevent=self.subevent
+                order = Order.objects.get(
+                    event = self.event,
+                    code = self.kwargs['code'].upper(),
                 )
-                if op.order.status == Order.STATUS_PAID or force:
-                    ci, created = Checkin.objects.get_or_create(position=op, defaults={
-                        'datetime': dt,
-                        'nonce': nonce,
-                    })
-                else:
+
+                if order.status != Order.STATUS_PENDING:
                     response['status'] = 'error'
-                    response['reason'] = 'unpaid'
-
-            if 'status' not in response:
-                if created or (nonce and nonce == ci.nonce):
-                    response['status'] = 'ok'
-                    if created:
-                        op.order.log_action('pretix.plugins.pretixdroid.scan', data={
-                            'position': op.id,
-                            'positionid': op.positionid,
-                            'first': True,
-                            'forced': op.order.status != Order.STATUS_PAID,
-                            'datetime': dt,
-                        })
+                    response['reason'] = order.status
                 else:
-                    if force:
-                        response['status'] = 'ok'
-                    else:
+                    try:
+                        mark_order_paid(order, manual=True)
+                    except Quota.QuotaExceededException:
                         response['status'] = 'error'
-                        response['reason'] = 'already_redeemed'
-                    op.order.log_action('pretix.plugins.pretixdroid.scan', data={
-                        'position': op.id,
-                        'positionid': op.positionid,
-                        'first': False,
-                        'forced': force,
-                        'datetime': dt,
-                    })
+                        response['reason'] = 'quota_exceeded'
 
-            response['data'] = {
-                'secret': op.secret,
-                'order': op.order.code,
-                'item': str(op.item),
-                'variation': str(op.variation) if op.variation else None,
-                'attendee_name': op.attendee_name or (op.addon_to.attendee_name if op.addon_to else ''),
-            }
+                    order.comment = order.comment + "\nOrder has been marked as paid by pretix-cashpoint."
+                    order.save()
+                    response['status'] = 'ok'
 
-        except OrderPosition.DoesNotExist:
+        except Order.DoesNotExist:
             response['status'] = 'error'
             response['reason'] = 'unknown_ticket'
 

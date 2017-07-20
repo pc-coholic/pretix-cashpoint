@@ -3,13 +3,13 @@ Pretix Cashpoint API plugin
 
 This is a plugin for `pretix`_. 
 
-Upon installation, it will offer a new REST API endpoint at ``/api/v1/organizers/<organizer>/orders/<orderid>/isNowMagicallyPayed``, that will allow you to set the status of an order manually to "payed" - just like if you would have pushed to "Mark as payed" in the pretix backend.
+Upon installation, it will offer a new REST API endpoint at ``/api/v1/organizers/<organizer>/orders/<orderid>/isNowMagicallyPayed``, that will allow you to set the status of an order manually to "Paid" - just like if you would have pushed to "Mark as paid" in the pretix backend.
 
 This plugin leverages the same API-tokens that are available to the current read-only API as outlined [here](https://docs.pretix.eu/en/latest/api/fundamentals.html#obtaining-an-api-token)
 
-As this plugin and operation is more of a doohickey and __not__ thoroughly tested, you might want to limit the activiation of the plugin to when you actually need it. As an additional precaution, you might want to limit access to the API, too.
+As this plugin and operation is more of a doohickey and **not** thoroughly tested, you might want to limit the activiation of the plugin to when you actually need it. As an additional precaution, you might want to limit access to the API, too.
 
-This plugin is supposed to interact with the `de.pccoholic.pretix.cashpoint`_ android app, which facilitates marking orders as payed from mobile devices.
+This plugin is supposed to interact with the `de.pccoholic.pretix.cashpoint`_ android app, which facilitates marking orders as paid from mobile devices.
 
 Production setup - pip method
 -----------------------------

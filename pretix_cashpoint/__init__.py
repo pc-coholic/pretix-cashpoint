@@ -6,9 +6,9 @@ class PluginApp(AppConfig):
     verbose_name = 'Pretix Cashpoint API'
 
     class PretixPluginMeta:
-        name = 'Pretix Cashpoint API'
+        name = 'Pretix Cashpoint API plugin'
         author = 'Martin Gross'
-        description = 'Pretix Cashpoint API plugin'
+        description = 'pretix plugin that implements an endpoint to mark orders as paid.'
         visible = True
         version = '1.0.0'
 
