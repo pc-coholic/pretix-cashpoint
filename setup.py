@@ -26,7 +26,7 @@ cmdclass = {
 setup(
     name='pretix-cashpoint',
     version='1.0.0',
-    description='pretix plugin that implements an endpoint to mark orders as paid.',
+    description='pretix plugin that implements an API endpoint to mark orders as paid.',
     long_description=long_description,
     url='https://www.github.com/pc-coholic/pretix-cashpoint',
     author='Martin Gross',
