@@ -3,7 +3,7 @@ Pretix Cashpoint API plugin
 
 This is a plugin for `pretix`_. 
 
-Upon installation, it will offer a new REST API endpoint at ``/api/v1/organizers/<organizer>/orders/<orderid>/isNowMagicallyPayed``, that will allow you to set the status of an order manually to "Paid" - just like if you would have pushed to "Mark as paid" in the pretix backend.
+Upon installation, it will offer a new REST API endpoint at ``/api/v1/organizers/<organizer>/orders/<orderid>/cashpoint``, that will allow you to set the status of an order manually to "Paid" - just like if you would have pushed to "Mark as paid" in the pretix backend.
 
 This plugin leverages the same API-tokens that are available to the current read-only API as outlined [here](https://docs.pretix.eu/en/latest/api/fundamentals.html#obtaining-an-api-token)
 
