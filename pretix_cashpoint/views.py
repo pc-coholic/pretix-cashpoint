@@ -1,30 +1,18 @@
 import json
-import logging
 import string
 
-import dateutil.parser
 from django.db import transaction
-from django.db.models import Count, Q
 from django.http import (
     HttpResponseForbidden, HttpResponseNotFound, JsonResponse,
 )
 from django.shortcuts import get_object_or_404
-from django.utils.crypto import get_random_string
 from django.utils.decorators import method_decorator
-from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, View
+from django.views.generic import View
 
-from pretix.base.models import Checkin, Event, Order, OrderPosition
+from pretix.base.models import Event, Order
 from pretix.base.models.event import SubEvent
-from pretix.control.permissions import EventPermissionRequiredMixin
-from pretix.helpers.urls import build_absolute_uri
-from pretix.multidomain.urlreverse import (
-    build_absolute_uri as event_absolute_uri,
-)
 
-from rest_framework.permissions import BasePermission
-from pretix.base.models.organizer import Organizer, TeamAPIToken
 from pretix.base.models.organizer import TeamAPIToken
 
 from pretix.base.services.orders import mark_order_paid
@@ -74,14 +62,7 @@ class ApiView(View):
 
 class ApiCashpointView(ApiView):
     def post(self, request, **kwargs):
-        logger = logging.getLogger(__name__)
-
         response = {}
-
-        if 'datetime' in request.POST:
-            dt = dateutil.parser.parse(request.POST.get('datetime'))
-        else:
-            dt = now()
 
         try:
             with transaction.atomic():
