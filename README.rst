@@ -1,6 +1,11 @@
 Pretix Cashpoint API plugin
 ===========================
 
+This project has been archived and should be used anymore.
+==========================================================
+Besides, the pretix API does now offers the functionality of this plugin as a native API call. See the `pretix API documentation`_ for details.
+===============================================================================================================================================
+
 This is a plugin for `pretix`_. 
 
 Upon installation, it will offer a new REST API endpoint at ``/api/v1/organizers/<organizer>/orders/<orderid>/cashpoint``, that will allow you to set the status of an order manually to "Paid" - just like if you would have pushed to "Mark as paid" in the pretix backend.
@@ -57,3 +62,4 @@ Released under the terms of the Apache License 2.0
 .. _pretix: https://github.com/pretix/pretix
 .. _pretix development setup: https://docs.pretix.eu/en/latest/development/setup.html
 .. _de.pccoholic.pretix.cashpoint: https://github.com/pc-coholic/de.pccoholic.pretix.cashpoint
+.. _pretix API documentation: https://docs.pretix.eu/en/latest/api/resources/orders.html#post--api-v1-organizers-(organizer)-events-(event)-orders-(code)-mark_paid-
