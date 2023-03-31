@@ -1,8 +1,8 @@
 Pretix Cashpoint API plugin
 ===========================
 
-This project has been archived and should be used anymore.
-==========================================================
+This project has been archived and should not be used anymore.
+==============================================================
 Besides, the pretix API does now offers the functionality of this plugin as a native API call. See the `pretix API documentation`_ for details.
 ===============================================================================================================================================
 
